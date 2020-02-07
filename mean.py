@@ -22,7 +22,21 @@ norm = np.trapz(prob, x = mu)
 
 prob = prob/norm
 
+N = 100000
+lista = [np.random.random()*np.pi]
+sigma_delta = 1.0
+
+for i in range(1,N):
+    propuesta  = lista[i-1] + np.random.normal(loc=0.0, scale=sigma_delta)
+    r = min(1,np.exp(post(propuesta)-post(lista[i-1])))
+    alpha = np.random.random()
+    if(alpha<r):
+        lista.append(propuesta)
+    else:
+        lista.append(lista[i-1])
+
 plt.plot(mu,prob)
+_ = plt.hist(lista, density=True, bins=40)
 plt.title("{} = {:.3f} {} {:.3f}".format("$\mu_0$",mu[mu0],"$\pm$",sigma2))
 plt.xlabel("{}".format("$\mu$"))
 plt.ylabel("posterior")
